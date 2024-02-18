@@ -15,11 +15,11 @@ class SignUp extends StatelessWidget {
         appBar: AppBar(
           title: Center(
             child: CustomText(
-              label: 'PUBLIC REPOSITORY',
+              label: 'AIRLINE BOOKING',
               labelcolor: appWhiteColor,
             ),
           ),
-          backgroundColor: primaryColor,
+          backgroundColor: Color.fromARGB(255, 56, 181, 150),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -106,7 +106,7 @@ class SignUp extends StatelessWidget {
                 CustomButton(
                   label: "Create Account",
                   onPressed: () {},
-                  buttonColor: primaryColor,
+                  buttonColor: Color.fromARGB(255, 56, 181, 150),
                   width: 18,
                 ),
               ],
