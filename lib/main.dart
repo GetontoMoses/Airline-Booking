@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/views/login.dart';
-import 'package:quotes/views/signup.dart';
+import 'package:quotes/views/dashboard.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: SignUp(),
+    home: Dashboard(),
     debugShowCheckedModeBanner: false,
   ));
 }
