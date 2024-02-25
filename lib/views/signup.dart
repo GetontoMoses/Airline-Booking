@@ -3,6 +3,7 @@ import 'package:quotes/views/customtext.dart';
 import 'package:quotes/configs/constants.dart';
 import 'package:quotes/views/customtextField.dart';
 import 'package:quotes/views/customButton.dart';
+import 'package:get/get.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
@@ -19,10 +20,10 @@ class SignUp extends StatelessWidget {
               labelcolor: appWhiteColor,
             ),
           ),
-          backgroundColor: Color.fromARGB(255, 56, 181, 150),
+          backgroundColor: Color(0xff368983),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding:const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -38,32 +39,17 @@ class SignUp extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                      CustomText(label: "First Name", labelcolor: Colors.blue),
-                ),
                 CustomTextField(
                   controller: usernameController,
-                  hintText: "Enter Firstname",
+                  hintText: "Enter FirstName",
                   prefixIcon: Icon(Icons.person),
                   suffixIcon: Icon(null),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                      CustomText(label: "Second Name", labelcolor: Colors.blue),
-                ),
                 CustomTextField(
                   controller: usernameController,
-                  hintText: "Enter Secondname",
+                  hintText: "Enter SecondName",
                   prefixIcon: Icon(Icons.person),
                   suffixIcon: Icon(null),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(
-                      label: "Phone Number", labelcolor: Colors.blue),
                 ),
                 CustomTextField(
                   controller: usernameController,
@@ -71,19 +57,11 @@ class SignUp extends StatelessWidget {
                   prefixIcon: Icon(Icons.call),
                   suffixIcon: Icon(null),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(label: "Email", labelcolor: Colors.blue),
-                ),
                 CustomTextField(
                   controller: usernameController,
                   hintText: "Enter email",
                   prefixIcon: Icon(Icons.email_rounded),
                   suffixIcon: Icon(null),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(label: "Password", labelcolor: Colors.blue),
                 ),
                 CustomTextField(
                   controller: passwordController,
@@ -91,27 +69,27 @@ class SignUp extends StatelessWidget {
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: Icon(Icons.visibility_off),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(
-                      label: "ReEnter password", labelcolor: Colors.blue),
-                ),
                 CustomTextField(
                   controller: passwordController,
                   hintText: "Enter password again",
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: Icon(Icons.visibility_off),
                 ),
-                const SizedBox(height: 20),
+               const SizedBox(height: 20),
                 CustomButton(
                   label: "Create Account",
-                  onPressed: () {},
-                  buttonColor: Color.fromARGB(255, 56, 181, 150),
+                  onPressed: navigateToDashboard,
+                  buttonColor: Color(0xff368983),
                   width: 18,
+                  action: navigateToDashboard,
                 ),
               ],
             ),
           ),
         ));
+  }
+
+  void navigateToDashboard() {
+    Get.toNamed("/dashboard");
   }
 }

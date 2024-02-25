@@ -3,6 +3,7 @@ import 'package:quotes/views/customtext.dart';
 import 'package:quotes/configs/constants.dart';
 import 'package:quotes/views/customtextField.dart';
 import 'package:quotes/views/customButton.dart';
+import 'package:get/get.dart';
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});
@@ -19,7 +20,7 @@ class LogIn extends StatelessWidget {
                 labelcolor: appWhiteColor,
               ),
             ),
-            backgroundColor: Color.fromARGB(255, 56, 181, 150)),
+            backgroundColor: Color(0xff368983)),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
@@ -52,7 +53,7 @@ class LogIn extends StatelessWidget {
                   child: CustomText(label: "Password", labelcolor: Colors.blue),
                 ),
                 CustomTextField(
-                  controller: usernameController,
+                  controller: passwordController,
                   hintText: "Enter Password",
                   prefixIcon: Icon(Icons.person),
                   suffixIcon: Icon(Icons.remove_red_eye),
@@ -61,12 +62,38 @@ class LogIn extends StatelessWidget {
                 CustomButton(
                   label: "Sign In",
                   onPressed: () {},
-                  buttonColor: Color.fromARGB(255, 56, 181, 150),
-                  width: 18,
+                  buttonColor: Color(0xff368983),
+                  width: 20,
+                  action: navigateToDashboard,
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 50),
+                  child: Row(
+                    children: [
+                      CustomText(
+                        label: "dont have an account? ",
+                        labelcolor: Colors.blue,
+                      ),
+                      CustomButton(
+                          label: "Sign Up",
+                          onPressed: () {},
+                          action: navigateToSignup,
+                          buttonColor: Color.fromARGB(255, 183, 184, 185))
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ));
+  }
+
+  void navigateToSignup() {
+    Get.toNamed("/signup");
+  }
+
+  void navigateToDashboard() {
+    Get.toNamed("/dashboard");
   }
 }
