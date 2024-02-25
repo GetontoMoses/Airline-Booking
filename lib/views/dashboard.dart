@@ -134,36 +134,104 @@ class Dashboard extends StatelessWidget {
             ],
           ),
           Container(
-            padding: const EdgeInsets.all(8.0),
-            width: double.infinity,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 194, 221, 203),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 194, 221, 203),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Nairobi --------- Malindi",
+                      fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Time: 12:00pm - 2:00pm",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              )),
           SizedBox(
             height: 10,
           ),
           Container(
-            width: double.infinity,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 194, 221, 203),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 194, 221, 203),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Mombasa --------- Malindi",
+                      fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Time: 12:00pm - 2:00pm",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              )),
           SizedBox(
             height: 10,
           ),
           Container(
-            width: double.infinity,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 194, 221, 203),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          )
+              padding: const EdgeInsets.all(8.0),
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 194, 221, 203),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Nairobi --------- Kisumu",
+                      fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomText(
+                      label: "Time: 12:00pm - 2:00pm",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
     ));
