@@ -4,12 +4,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final String hintText;
+  final Color hintColor;
   final Icon suffixIcon;
   final Icon prefixIcon;
 
   const CustomTextField({
     super.key,
     required this.controller,
+    this.hintColor = Colors.black,
     this.obscureText = false,
     required this.hintText,
     required this.suffixIcon,
@@ -27,6 +29,8 @@ class CustomTextField extends StatelessWidget {
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))),
           hintText: hintText,
+          
+          hintStyle: TextStyle(color: hintColor),
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
         ),
