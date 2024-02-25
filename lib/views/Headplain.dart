@@ -63,7 +63,7 @@ Widget head() {
                       ),
                       Center(
                         child: CustomText(
-                          label: "Book a Flight",
+                          label: "Search for a Flight",
                           fontWeight: FontWeight.bold,
                           fontsize: 25.0,
                           labelcolor: Colors.white,
