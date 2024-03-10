@@ -7,6 +7,8 @@ class CustomTextField extends StatelessWidget {
   final Color hintColor;
   final Icon suffixIcon;
   final Icon prefixIcon;
+  final Color borderColor;
+  final VoidCallback? togglePasswordVisibility;
 
   const CustomTextField({
     super.key,
@@ -16,6 +18,8 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     required this.suffixIcon,
     required this.prefixIcon,
+    this.borderColor = Colors.black,
+    this.togglePasswordVisibility,
   });
 
   @override
@@ -26,12 +30,16 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: borderColor),
+          ),
           hintText: hintText,
-          
           hintStyle: TextStyle(color: hintColor),
-          suffixIcon: suffixIcon,
+          suffixIcon: InkWell(
+            onTap: togglePasswordVisibility, // Call the callback function
+            child: suffixIcon,
+          ),
           prefixIcon: prefixIcon,
         ),
       ),

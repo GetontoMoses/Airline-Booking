@@ -27,9 +27,9 @@ class CustomButton extends StatelessWidget {
         labelcolor: Colors.white,
       ),
       style: ElevatedButton.styleFrom(
-          backgroundColor: buttonColor,
-          minimumSize: Size(width, 50),
-          ),
+        backgroundColor: buttonColor,
+        minimumSize: Size(width, 50),
+      ),
     );
   }
 }

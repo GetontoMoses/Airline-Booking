@@ -3,10 +3,9 @@ import 'package:get/get.dart';
 
 import 'package:quotes/controllers/HomeController.dart';
 import 'package:quotes/views/Dashboard.dart';
-import 'package:quotes/views/search.dart';
+
 import 'package:quotes/views/tickets.dart';
-
-
+import 'package:quotes/views/search.dart';
 
 HomeController homeController = Get.put(HomeController());
 var Screen = [Dashboard(), Search(), Tickets()];

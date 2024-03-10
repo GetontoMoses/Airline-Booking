@@ -20,7 +20,7 @@ Widget head() {
               children: [
                 Positioned(
                   top: 35,
-                  left: 305,
+                  right: 30,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(7),
                     child: Container(
