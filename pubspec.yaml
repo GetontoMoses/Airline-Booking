@@ -11,6 +11,19 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.6
+  http: ^1.2.0
+  carousel_slider: ^4.2.1
+  image_picker: ^1.0.7
+  file_picker: ^8.0.0+1
+  dio: ^5.4.2+1
+  path_provider: ^2.1.2
+  flutter_downloader: ^1.11.7
+  image_preview: ^1.0.7
+  syncfusion_flutter_pdfviewer: ^25.1.39
+  device_info_plus: ^9.1.2
+  flutter_secure_storage: ^4.2.1
+  shared_preferences: ^2.2.3
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +33,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

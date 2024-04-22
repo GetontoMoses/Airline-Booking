@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quotes/views/customtext.dart';
-import 'package:quotes/configs/constants.dart';
+
 
 class CustomButton extends StatelessWidget {
   final String label;
   final Function onPressed;
-  final VoidCallback? action;
   final Color buttonColor;
   final double width;
 
@@ -13,15 +12,16 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
-    this.buttonColor = appGrayColor,
+    this.buttonColor = Colors.blue,
     this.width = 18,
-    this.action,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: action,
+      onPressed: () {
+        onPressed();
+      },
       child: CustomText(
         label: label,
         labelcolor: Colors.white,
