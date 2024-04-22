@@ -1,242 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/views/customtext.dart';
-import 'package:quotes/configs/constants.dart';
-import 'package:quotes/views/customtextField.dart';
-import 'package:quotes/views/customButton.dart';
-import 'package:quotes/views/Headplain.dart';
+import 'package:http/http.dart' as http;
+import 'package:quotes/views/booking.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class Dashboard extends StatefulWidget {
+  @override
+  DashboardState createState() => DashboardState();
+}
+
+class DashboardState extends State<Dashboard> {
+  late List<Map<String, dynamic>> flights;
+  late String searchQuery;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize flights list and search query
+    flights = [];
+    searchQuery = '';
+    // Fetch initial flight data
+    fetchFlights();
+  }
+
+  Future<void> fetchFlights() async {
+    setState(() {
+      isLoading = true;
+    });
+    // Replace this URL with your API endpoint for fetching all flights
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:8000/flight/flights/'));
+    if (response.statusCode == 200) {
+      // Decode JSON response
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        flights = List<Map<String, dynamic>>.from(data);
+        isLoading = false;
+      });
+    } else {
+      // Handle API error
+      setState(() {
+        isLoading = false;
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to fetch flight data'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> searchFlights(String query) async {
+    setState(() {
+      isLoading = true;
+    });
+    // Replace this URL with your API endpoint for searching flights
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:8000/flight//search/?departure_city=&destination_city=&price=&departure_time='));
+    if (response.statusCode == 200) {
+      // Decode JSON response
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        flights = List<Map<String, dynamic>>.from(data);
+        isLoading = false;
+      });
+    } else {
+      // Handle API error
+      setState(() {
+        isLoading = false;
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to search for flights'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController textController = TextEditingController();
-    return Scaffold(
-        body: SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 320,
-              child: head(),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(
-                    label: "Categories",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 194, 221, 203),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.park,
-                            size: 50,
-                            color: appBlackColor,
-                          ),
-                          CustomText(
-                            label: "Maasai Mara",
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 194, 221, 203),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.landscape,
-                            size: 50,
-                            color: appBlackColor,
-                          ),
-                          CustomText(
-                            label: "Mount Kenya",
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 194, 221, 203),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.beach_access,
-                            size: 50,
-                            color: appBlackColor,
-                          ),
-                          CustomText(
-                            label: "Malindi",
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+    return Column(
+      children: [
+         Container(
+          height: 90,
+          width: double.infinity,
+          color: Color.fromARGB(255, 82, 171, 37),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Text(
+                "Search for Papers",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomText(
-                    label: "Search Results",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-                padding: const EdgeInsets.all(8.0),
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 194, 221, 203),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Nairobi --------- Malindi",
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Time: 12:00pm - 2:00pm",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ],
-                  ),
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                padding: const EdgeInsets.all(8.0),
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 194, 221, 203),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Mombasa --------- Malindi",
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Time: 12:00pm - 2:00pm",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ],
-                  ),
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                padding: const EdgeInsets.all(8.0),
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 194, 221, 203),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Nairobi --------- Kisumu",
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomText(
-                        label: "Time: 12:00pm - 2:00pm",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ],
-                  ),
-                )),
-          ],
+          ),
         ),
+        TextField(
+          decoration: InputDecoration(
+            hintText:
+                'departure city, or destination city',
+            prefixIcon: Icon(Icons.search),
+          ),
+          onChanged: (value) {
+            setState(() {
+              searchQuery = value;
+            });
+            searchFlights(
+                value); // Call searchFlights method when search query changes
+          },
+        ),
+        SizedBox(height: 10),
+        // Flight information container
+        Expanded(
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : flights.isEmpty
+                  ? Center(child: Text('No flights available'))
+                  : ListView.builder(
+                      itemCount: flights.length,
+                      itemBuilder: (context, index) {
+                        final flight = flights[index];
+                        return FlightItem(flight: flight);
+                      },
+                    ),
+        ),
+      ],
+    );
+  }
+}
+
+class FlightItem extends StatelessWidget {
+  final Map<String, dynamic> flight;
+
+  const FlightItem({Key? key, required this.flight}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
       ),
-    ));
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Flight Number: ${flight['flight_number']}'),
+          Text('Departure City: ${flight['departure_city']}'),
+          Text('Destination City: ${flight['destination_city']}'),
+          Text('Departure Time: ${flight['departure_time']}'),
+          Text('Arrival Time: ${flight['arrival_time']}'),
+          Text('Capacity: ${flight['capacity']}'),
+          Text('Price: ${flight['price']}'),
+            SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              _bookFlight(context, flight['id']);
+            },
+            child: Text('Book this flight'),
+          ),
+        ],
+      ),
+    );
+  }
+   void _bookFlight(BuildContext context, int flightId) async {
+    // Save flight ID to shared preferences
+   await saveFlightIdToSharedPreferences(flightId);
+
+    // Navigate to booking page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingPage(flightId: flightId),
+      ),
+    );
+  }
+  Future<void> saveFlightIdToSharedPreferences(int flightId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('flight_id', flightId);
+  }
+
+// Retrieve flight ID from shared preferences
+  Future<int?> getFlightIdFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('flight_id');
   }
 }
