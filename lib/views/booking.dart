@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:quotes/views/customtext.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class BookingPage extends StatefulWidget {
   final int flightId;
@@ -26,6 +26,8 @@ class _BookingPageState extends State<BookingPage> {
   String departureTime = ''; // Provide a default value
   String arrivalTime = ''; // Provide a default value
   double price = 0.0; // Provide a default value
+  TextEditingController passportController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -59,6 +61,8 @@ class _BookingPageState extends State<BookingPage> {
       children = 0;
       infants = 0;
       flightClass = 'economy';
+      passportController.clear();
+      phoneController.clear();
     });
   }
 
@@ -90,123 +94,224 @@ class _BookingPageState extends State<BookingPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(label: "Flight Number: ${flightNumber ?? 'N/A'}"),
-            CustomText(label: "Departure City: $departureCity"),
-            CustomText(label: "Destination City: $destinationCity"),
-            CustomText(label: "Departure Time: $departureTime"),
-            CustomText(label: "Arrival Time: $arrivalTime"),
-            CustomText(label: "Price: \$${price.toStringAsFixed(2)}"),
-            Text(
-              'Number of Adults:',
-              style: TextStyle(fontSize: 18),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 235, 233, 233),
+              border: Border.all(color: Color.fromARGB(255, 57, 57, 57)),
+              borderRadius: BorderRadius.circular(10),
             ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (adults > 1) adults--;
-                    });
-                  },
-                  icon: Icon(Icons.remove),
-                ),
-                Text('$adults'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      adults++;
-                    });
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: CustomText(
+                          label: "Flight Number: ${flightNumber ?? 'N/A'}")),
+                  SizedBox(height: 10),
+                  Center(
+                      child:
+                          CustomText(label: "Departure City: $departureCity")),
+                  SizedBox(height: 10),
+                  Center(
+                      child: CustomText(
+                          label: "Destination City: $destinationCity")),
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Text(
+                                'Adults:',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (adults > 1) adults--;
+                                      });
+                                    },
+                                    icon: Icon(Icons.remove),
+                                  ),
+                                  Text('$adults'),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        adults++;
+                                      });
+                                    },
+                                    icon: Icon(Icons.add),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 80),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Text(
+                                'Children:',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (children > 0) children--;
+                                      });
+                                    },
+                                    icon: Icon(Icons.remove),
+                                  ),
+                                  Text('$children'),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        children++;
+                                      });
+                                    },
+                                    icon: Icon(Icons.add),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                ' Infants:',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (infants > 0) infants--;
+                                      });
+                                    },
+                                    icon: Icon(Icons.remove),
+                                  ),
+                                  Text('$infants'),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        infants++;
+                                      });
+                                    },
+                                    icon: Icon(Icons.add),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 80),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Flight Class:',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(height: 8),
+                              DropdownButton<String>(
+                                value: flightClass,
+                                onChanged: (value) {
+                                  setState(() {
+                                    flightClass = value!;
+                                  });
+                                },
+                                items: ['economy', 'business', 'first']
+                                    .map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: passportController,
+                    decoration: InputDecoration(
+                      labelText: 'Passport Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _saveBooking();
+                      },
+                      child: Text('Confirm Booking'),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                ],
+              ),
             ),
-            SizedBox(height: 16),
-            Text(
-              'Number of Children:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (children > 0) children--;
-                    });
-                  },
-                  icon: Icon(Icons.remove),
-                ),
-                Text('$children'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      children++;
-                    });
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Number of Infants:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (infants > 0) infants--;
-                    });
-                  },
-                  icon: Icon(Icons.remove),
-                ),
-                Text('$infants'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      infants++;
-                    });
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Flight Class:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 8),
-            DropdownButton<String>(
-              value: flightClass,
-              onChanged: (value) {
-                setState(() {
-                  flightClass = value!;
-                });
-              },
-              items: ['economy', 'business', 'first'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _saveBooking();
-              },
-              child: Text('Confirm Booking'),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -214,7 +319,6 @@ class _BookingPageState extends State<BookingPage> {
 
   Future<void> _saveBooking() async {
     // Retrieve user ID from shared preferences
-
     Map<String, dynamic> userInfo = await _getUserInfo();
     int? userId = userInfo['userId'];
 
@@ -232,6 +336,8 @@ class _BookingPageState extends State<BookingPage> {
       'flight_class': flightClass,
       'flight': widget.flightId,
       'user': userId,
+      'passport_number': passportController.text,
+      'phone_number': phoneController.text,
     };
 
     // Send POST request to the API endpoint

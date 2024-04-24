@@ -5,7 +5,10 @@ import 'package:http/http.dart' as http;
 class UpdateInfo extends StatefulWidget {
   final int bookingId;
 
-  const UpdateInfo({Key? key, required this.bookingId}) : super(key: key);
+  const UpdateInfo({
+    Key? key,
+    required this.bookingId,
+  }) : super(key: key);
 
   @override
   State<UpdateInfo> createState() => _UpdateInfoState();
@@ -16,10 +19,14 @@ class _UpdateInfoState extends State<UpdateInfo> {
   late int? children = 0;
   late int infants = 0;
   late String flightClass = 'economy';
+  late TextEditingController passportController;
+  late TextEditingController phoneController;
+  late String passportNumber = '';
+  late String phoneNumber = '';
 
-  @override
-  void initState() {
-    super.initState();
+  _UpdateInfoState() {
+    passportController = TextEditingController();
+    phoneController = TextEditingController();
     fetchBookingInfo();
   }
 
@@ -37,6 +44,10 @@ class _UpdateInfoState extends State<UpdateInfo> {
           children = jsonResponse['children'];
           infants = jsonResponse['infants'] ?? 0;
           flightClass = jsonResponse['flight_class'] ?? 'economy';
+          passportNumber = jsonResponse['passport_number'] ?? '';
+          phoneNumber = jsonResponse['phone_number'] ?? '';
+          passportController.text = passportNumber;
+          phoneController.text = phoneNumber;
         });
       } else {
         throw Exception('Failed to fetch booking info');
@@ -53,6 +64,8 @@ class _UpdateInfoState extends State<UpdateInfo> {
         'children': children,
         'infants': infants,
         'flight_class': flightClass,
+        'passport_number': passportController.text,
+        'phone_number': phoneController.text,
       };
 
       final response = await http.patch(
@@ -83,108 +96,135 @@ class _UpdateInfoState extends State<UpdateInfo> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Number of Adults:'),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (adults > 0) adults--;
-                    });
-                  },
-                  icon: Icon(Icons.remove),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Number of Adults:'),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (adults > 0) adults--;
+                      });
+                    },
+                    icon: Icon(Icons.remove),
+                  ),
+                  Text('$adults'),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        adults++;
+                      });
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text('Number of Children:'),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (children != null && children! > 0)
+                          children = children! - 1;
+                      });
+                    },
+                    icon: Icon(Icons.remove),
+                  ),
+                  Text('${children ?? 0}'),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        children = (children ?? 0) + 1;
+                      });
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text('Number of Infants:'),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (infants > 0) infants--;
+                      });
+                    },
+                    icon: Icon(Icons.remove),
+                  ),
+                  Text('$infants'),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        infants++;
+                      });
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text('Flight Class:'),
+              SizedBox(height: 8),
+              DropdownButton<String>(
+                value: flightClass,
+                onChanged: (value) {
+                  setState(() {
+                    flightClass = value!;
+                  });
+                },
+                items: ['economy', 'business', 'first'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: passportController,
+                decoration: InputDecoration(
+                  labelText: 'Passport Number',
+                  border: OutlineInputBorder(),
                 ),
-                Text('$adults'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      adults++;
-                    });
-                  },
-                  icon: Icon(Icons.add),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(),
                 ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text('Number of Children:'),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
+              ),
+              SizedBox(height: 16),
+              Center(
+                child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      if (children != null && children! > 0)
-                        children = children! - 1;
-                    });
+                    updateBookingInfo();
                   },
-                  icon: Icon(Icons.remove),
+                  child: Text('Update Booking Info'),
                 ),
-                Text('${children ?? 0}'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      children = (children ?? 0) + 1;
-                    });
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text('Number of Infants:'),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (infants > 0) infants--;
-                    });
-                  },
-                  icon: Icon(Icons.remove),
-                ),
-                Text('$infants'),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      infants++;
-                    });
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text('Flight Class:'),
-            SizedBox(height: 8),
-            DropdownButton<String>(
-              value: flightClass,
-              onChanged: (value) {
-                setState(() {
-                  flightClass = value!;
-                });
-              },
-              items: ['economy', 'business', 'first'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                updateBookingInfo();
-              },
-              child: Text('Update Booking Info'),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    passportController.dispose();
+    phoneController.dispose();
+    super.dispose();
   }
 }

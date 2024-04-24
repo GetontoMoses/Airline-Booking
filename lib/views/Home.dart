@@ -12,9 +12,9 @@ HomeController homeController = Get.put(HomeController());
 var Screen = [
   Dashboard(),
   BookingInfo(),
+  // Ticket widget with dynamic data
   Ticket()
-
-]; // Provide a default value for flightId
+];
 
 class Home extends StatelessWidget {
   const Home({Key? key});

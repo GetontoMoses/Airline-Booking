@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:quotes/views/complete.dart';
 import 'package:quotes/views/edit.dart';
+import 'package:quotes/views/ticket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingInfo extends StatefulWidget {
@@ -14,7 +14,7 @@ class BookingInfo extends StatefulWidget {
 
 class _BookingInfoState extends State<BookingInfo> {
   late List<dynamic> bookingInfo = [];
-  late String flightNumber = ''; // Initialize flightNumber
+  late String flightNumber = '';
 
   @override
   void initState() {
@@ -25,13 +25,11 @@ class _BookingInfoState extends State<BookingInfo> {
   Future<void> fetchData() async {
     try {
       final userInfo = await _getUserInfo();
-      flightNumber = userInfo['flight_number'] ?? ''; // Update flightNumber
+      flightNumber = userInfo['flight_number'] ?? '';
       int userId = userInfo['userId'] ?? 1;
 
       final response = await http
           .get(Uri.parse('http://10.0.2.2:8000/flight/booking/$userId/'));
-
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = json.decode(response.body);
@@ -40,6 +38,8 @@ class _BookingInfoState extends State<BookingInfo> {
           setState(() {
             bookingInfo = jsonResponse;
           });
+          // Save booking info to local storage
+          saveBookingInfo(jsonResponse);
         } else {
           throw Exception('No bookings found for the user');
         }
@@ -72,82 +72,78 @@ class _BookingInfoState extends State<BookingInfo> {
     };
   }
 
+  Future<void> saveBookingInfo(List<dynamic> jsonResponse) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('booking_info', json.encode(jsonResponse));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Booking Information')),
+        title: Text('Booking Information'),
+        centerTitle: true,
       ),
       body: bookingInfo.isEmpty
           ? Center(child: Text('No booked flights.'))
-          : ListView.builder(
-              itemCount: bookingInfo.length,
-              itemBuilder: (context, index) {
-                var booking = bookingInfo[index];
-                return Card(
-                  elevation: 3,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text('Flight Number: $flightNumber'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('ID: ${booking['id']}'),
-                            Text(
-                                'Departure City: ${booking['departure_city'] ?? 'N/A'}'),
-                            Text(
-                                'Destination City: ${booking['destination_city'] ?? 'N/A'}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [],
-                        ),
+          : SingleChildScrollView(
+              child: Column(
+                children: bookingInfo.map((booking) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: ListTile(
+                      title: Text(
+                        'Flight Number: $flightNumber',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 10), // Add some spacing
-                      Row(
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 10),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigate to the update page with the booking ID
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      UpdateInfo(bookingId: booking['id']),
-                                ),
-                              );
-                            },
-                            child: Text('Edit'),
+                          SizedBox(height: 4),
+                          Text('ID: ${booking['id']}'),
+                          Text(
+                            'Departure City: ${booking['departure_city'] ?? 'N/A'}',
                           ),
-                          SizedBox(width: 15),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Implement cancel booking functionality
-                              // Including deletion from both Flutter and backend
-                              cancelBooking(booking['id']);
-                            },
-                            child: Text('Cancel'),
+                          Text(
+                            'Destination City: ${booking['destination_city'] ?? 'N/A'}',
                           ),
-                          SizedBox(width: 15),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigate to the complete booking page
-                              CompleteBookingPage(bookingInfo: booking)
-                                  .build(context);
-                            },
-                            child: Text('Complete Booking'),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateInfo(bookingId: booking['id']),
+                                    ),
+                                  );
+                                },
+                                child: Text('Edit'),
+                              ),
+                              SizedBox(width: 5),
+                              ElevatedButton(
+                                onPressed: () {
+                                  cancelBooking(booking['id']);
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              SizedBox(width: 5),
+                              ElevatedButton(
+                                onPressed: () {
+                                  fetchAdditionalInfoAndNavigate(
+                                      context, booking);
+                                },
+                                child: Text('Complete Booking'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
     );
   }
@@ -165,7 +161,15 @@ class _BookingInfoState extends State<BookingInfo> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Center(child: Text('Booking canceled successfully')),
+              title: Text('Booking canceled successfully'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
             );
           },
         );
@@ -174,6 +178,23 @@ class _BookingInfoState extends State<BookingInfo> {
       }
     } catch (e) {
       print('Error canceling booking: $e');
+    }
+  }
+
+  Future<void> fetchAdditionalInfoAndNavigate(
+      BuildContext context, dynamic bookingInfo) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? passportNumber = prefs.getString('passport_number') ?? 'N/A';
+      String? phoneNumber = prefs.getString('phone_number') ?? 'N/A';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Ticket(),
+        ),
+      );
+    } catch (e) {
+      print('Error fetching additional info: $e');
     }
   }
 }

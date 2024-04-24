@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:quotes/views/booking.dart';
 import 'package:quotes/views/customTextField.dart';
@@ -108,45 +109,88 @@ class DashboardState extends State<Dashboard> {
     return Column(
       children: [
         Container(
-          height: 90,
+          height: 200,
           width: double.infinity,
-          color: Color.fromARGB(255, 82, 171, 37),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Text(
-                "Search for Papers",
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
+          color: Color.fromARGB(255, 8, 160, 155),
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              Center(
+                child: Text(
+                  "Search for Flights",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
+              SizedBox(height: 10),
+              Center(
+                child: Text(
+                  "Book your next flight!",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Row(
           children: [
             Expanded(
-                child: Column(
-              children: [
-                CustomTextField(
-                  controller: departureController,
-                  hintText: "From: ",
-                  prefixIcon: Icon(Icons.book_online),
-                  suffixIcon: Icon(null),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextField(
-                  controller: destinationController,
-                  hintText: "TO:",
-                  prefixIcon: Icon(Icons.calendar_month),
-                  suffixIcon: Icon(null),
-                  textCapitalization: TextCapitalization.characters,
-                ),
-                SizedBox(height: 10),
-              ],
+                child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    "Search for a Flight",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextField(
+                    controller: departureController,
+                    decoration: InputDecoration(
+                      hintText: "FROM:",
+                      prefixIcon: Icon(Icons.calendar_today),
+                      suffixIcon: Icon(null),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            15)), // Adjust the radius to your preference
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 10), // Adjust the padding as needed
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: destinationController,
+                    decoration: InputDecoration(
+                      hintText: "To",
+                      prefixIcon: Icon(Icons.calendar_today),
+                      suffixIcon: Icon(null),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            15)), // Adjust the radius to your preference
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 10), // Adjust the padding as needed
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
             )),
             SizedBox(width: 10),
             ElevatedButton(
@@ -156,6 +200,13 @@ class DashboardState extends State<Dashboard> {
           ],
         ),
         SizedBox(height: 10),
+        Text(
+          "Best Picks for You & Search Results:",
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+
         // Flight information container
         Expanded(
           child: isLoading
@@ -200,11 +251,13 @@ class FlightItem extends StatelessWidget {
           Text('Capacity: ${flight['capacity']}'),
           Text('Price: ${flight['price']}'),
           SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              _bookFlight(context, flight);
-            },
-            child: Text('Book this flight'),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                _bookFlight(context, flight);
+              },
+              child: Text('Book this flight'),
+            ),
           ),
         ],
       ),
