@@ -214,7 +214,7 @@ class _LoginState extends State<Login> {
           var username = responseData['username'];
 
           print('user id $userId');
-          print("Login successful: $responseData");
+          print("username $username");
           await saveUserData(userId, username);
           // Navigate to the dashboard page
           navigateToDashboard();

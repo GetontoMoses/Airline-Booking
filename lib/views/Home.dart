@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quotes/views/InfoBooking.dart';
+import 'package:quotes/views/ticket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:quotes/controllers/HomeController.dart';
 import 'package:quotes/views/Dashboard.dart';
-import 'package:quotes/views/tickets.dart';
 import 'package:quotes/views/booking.dart';
 
 HomeController homeController = Get.put(HomeController());
 var Screen = [
   Dashboard(),
-  BookingPage(flightId: 0),
-  Tickets()
+  BookingInfo(),
+  Ticket()
+
 ]; // Provide a default value for flightId
 
 class Home extends StatelessWidget {
@@ -31,12 +33,12 @@ class Home extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.airplane_ticket),
+            label: 'My Booking',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.download_rounded),
-            label: 'Tickets',
+            icon: Icon(Icons.airplane_ticket),
+            label: 'Ticket',
           ),
         ],
       ),
